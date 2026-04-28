@@ -1,0 +1,63 @@
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
+<!-- * * * * * * * to get started with your project! * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!--<router-outlet></router-outlet>-->
+<div class="shell">
+  <header>
+    <div class="logo">TASK<span>GRID</span></div>
+    <button class="btn-new" (click)="showForm = !showForm">
+      {{ showForm ? '✕ cancelar' : '+ nueva tarea' }}
+    </button>
+  </header>
+
+  <!-- FORM -->
+  <div class="form-panel" [class.open]="showForm">
+    <input class="inp" [(ngModel)]="newTask.title" placeholder="Título *" />
+    <input class="inp" [(ngModel)]="newTask.description" placeholder="Descripción (opcional)" />
+    <div class="priority-group">
+      <button *ngFor="let p of priorities"
+              class="pri-btn"
+              [class.active]="newTask.priority === p"
+              [class]="'pri-btn ' + priorityClass(p)"
+              (click)="newTask.priority = p">
+        {{ p }}
+      </button>
+    </div>
+    <button class="btn-submit" (click)="submit()">Crear tarea</button>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <button *ngFor="let f of ['ALL','PENDING','COMPLETED']"
+            class="filter-btn"
+            [class.active]="filter === f"
+            (click)="setFilter(f)">
+      {{ f === 'ALL' ? 'Todas' : f === 'PENDING' ? 'Pendientes' : 'Completadas' }}
+    </button>
+  </div>
+
+  <!-- LISTA -->
+  <div class="task-list">
+    <div *ngIf="tasks.length === 0" class="empty">sin tareas aquí</div>
+
+    <div *ngFor="let t of tasks" class="task-card" [class.done]="t.completed">
+      <div class="card-left">
+        <span class="badge" [class]="priorityClass(t.priority)">{{ t.priority }}</span>
+        <div>
+          <div class="task-title">{{ t.title }}</div>
+          <div class="task-desc" *ngIf="t.description">{{ t.description }}</div>
+          <div class="task-date">{{ t.createdAt }}</div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="btn-complete" *ngIf="!t.completed" (click)="complete(t.id!)">✓</button>
+        <button class="btn-delete" (click)="delete(t.id!)">✕</button>
+      </div>
+    </div>
+  </div>
+</div>
